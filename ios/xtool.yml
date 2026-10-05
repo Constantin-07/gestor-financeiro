@@ -1,0 +1,6 @@
+version: 1
+bundleID: com.constantin.gestor
+iconPath: Resources/AppIcon.png
+infoPath: Resources/Info.plist
+resources:
+  - Resources/www

@@ -1,0 +1,44 @@
+# Gera o .ipa do app de iPhone num Mac do GitHub, com o Xcode oficial da imagem.
+# O .ipa sai sem assinatura: quem instala assina com a própria Apple ID
+# (Sideloadly, AltStore, SideStore…).
+name: iOS (.ipa)
+
+# Manual (aba Actions → "Run workflow"): o build local com xtool é o caminho principal.
+on:
+  workflow_dispatch:
+
+jobs:
+  ipa:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Usar o Xcode mais novo da imagem
+        run: |
+          XC=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
+          sudo xcode-select -s "$XC"
+          xcodebuild -version
+          swift --version
+
+      - name: Copiar o app web para o pacote
+        run: python3 ios/sync-www.py
+
+      - name: Baixar o xtool
+        run: |
+          curl -fsSL -o xtool.zip https://github.com/xtool-org/xtool/releases/download/1.20.1/xtool.app.zip
+          unzip -q xtool.zip
+          echo "XTOOL=$PWD/xtool.app/Contents/MacOS/xtool" >> "$GITHUB_ENV"
+
+      - name: Compilar o .ipa
+        working-directory: ios
+        run: |
+          "$XTOOL" dev build --configuration release --ipa
+          find . -name "*.ipa" -not -path "./.build/*" -print
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gestor-financeiro-ios
+          path: ios/**/*.ipa
+          if-no-files-found: error
+          retention-days: 30

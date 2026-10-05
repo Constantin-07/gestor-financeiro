@@ -1,0 +1,16 @@
+# Android
+android/.gradle/
+android/.build-tmp/
+android/app/build/
+android/build/
+android/local.properties
+
+# iOS (gerado pelo build)
+ios/.build/
+ios/xtool/
+ios/Resources/www/
+*.ipa
+*.apk
+
+# sistema
+.DS_Store

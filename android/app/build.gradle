@@ -1,0 +1,31 @@
+plugins { id "com.android.application" }
+
+android {
+  namespace "com.constantin.gestor"
+  compileSdk 34
+
+  defaultConfig {
+    applicationId "com.constantin.gestor"
+    minSdk 24
+    targetSdk 34
+    versionCode 15
+    versionName "0.14"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      // sem keystore própria: `assembleRelease` sai sem assinatura.
+      // Para instalar no celular use `assembleDebug`.
+    }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+}
+
+dependencies {
+  implementation "androidx.webkit:webkit:1.11.0"
+}
